@@ -101,5 +101,5 @@ func main() {
 
 	port := os.Getenv("PORT")
 	fmt.Println("Listening on port " + port)
-	log.Fatal(http.ListenAndServe(port, nil))
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
