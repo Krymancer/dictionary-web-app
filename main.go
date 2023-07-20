@@ -2,12 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"flag"
 	"fmt"
 	"html/template"
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 type APIResponse []struct {
@@ -41,15 +41,6 @@ type APIResponse []struct {
 }
 
 func main() {
-	port := flag.Int("port", -1, "specify a port")
-	flag.Parse()
-
-	portStr := "8080"
-
-	if *port != -1 {
-		portStr = fmt.Sprintf(":%d", *port)
-	}
-
 	index := func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -108,5 +99,7 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/word", word)
 
-	log.Fatal(http.ListenAndServe(portStr, nil))
+	port := os.Getenv("PORT")
+
+	log.Fatal(http.ListenAndServe(port, nil))
 }
