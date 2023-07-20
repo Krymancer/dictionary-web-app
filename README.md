@@ -4,8 +4,9 @@ This is a solution to the [Dictionary web app challenge on Frontend Mentor](http
 
 ## Screenshots
 
-![light](./screenshot.jpg)
-![dark](./screenshot.jpg)
+![light](https://raw.githubusercontent.com/Krymancer/dictionary-web-app/main/.github/light-mode.png)
+
+![dark](https://raw.githubusercontent.com/Krymancer/dictionary-web-app/main/.github/dark-mode.png)
 
 ## My process
 
