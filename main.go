@@ -108,5 +108,5 @@ func main() {
 	http.HandleFunc("/", index)
 	http.HandleFunc("/word", word)
 
-	log.Fatal(http.ListenAndServe(":"+portStr, nil))
+	log.Fatal(http.ListenAndServe(portStr, nil))
 }
