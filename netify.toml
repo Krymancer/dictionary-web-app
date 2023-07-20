@@ -1,7 +1,0 @@
-[build]
-command = "go build -o main"
-publish = "."
-
-[build.environment]
-  GO_IMPORT_PATH = "github.com/krymancer/dictionary-web-app"
-  GO111MODULE = "on"

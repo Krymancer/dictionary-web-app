@@ -100,6 +100,6 @@ func main() {
 	http.HandleFunc("/word", word)
 
 	port := os.Getenv("PORT")
-
+	fmt.Println("Listening on port " + port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
