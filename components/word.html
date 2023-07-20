@@ -1,0 +1,57 @@
+<div id="word" class="mt-11">
+  <div class="flex justify-between">
+    <div>
+      <h1 class="text-2xl font-bold">{{ .Word }}</h1>
+      <span class="text-purple">{{ .Phonetic }}</span>
+    </div>
+    <div class="rounded-full bg-purple/25 w-20 h-20 flex items-center justify-center cursor-pointer text-purple hover:bg-purple hover:text-white transition-all">
+      <svg class="ml-1" width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" onclick="play()">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M0 0V21L21 10.5L0 0Z" fill="currentColor"/>
+      </svg>{{ range .Phonetics}}
+        {{ if .Audio}}
+        <audio id="audio" src="{{ .Audio }}"></audio>
+        {{ end }}
+      {{ end}}
+    </div>
+  </div>
+
+  {{ range .Meanings}}
+    <div>
+      <div class="flex items-center gap-4 mt-10">
+        <span class="font-bold italic">{{ .PartOfSpeech }}</span>
+        <div class="border border-gray-300 h-0 w-full"></div>
+      </div>
+
+      <div class="mt-10">
+        Meaning:
+      <div class="flex items-center px-8 pt-4">
+        <ul class="list-disc marker:text-purple flex flex-col gap-4" >
+          {{range .Definitions}}
+          <li>
+            <div class="flex flex-col">
+              <span>{{ .Definition }}</span>
+              {{ if .Example}}
+              <span class="text-gray-400">“{{ .Example }}”</span>
+              {{ end }}
+            </div>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+
+    {{ if .Synonyms}}
+    <div class="mt-10">
+      Synonyms {{ range .Synonyms}}
+      <span class="text-purple font-bold hover:underline cursor-pointer">{{ .}}</span>
+      {{ end}}
+    </div>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <div class="mt-10">
+    <div class="border border-gray-300 h-0 w-full"></div>
+    <div class="text-gray-400 mt-4">Source <a class="text-gray-600 dark:text-white underline" href="#">{{ index .SourceUrls 0 }}</a></div>
+  </div>
+</div>

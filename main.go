@@ -40,39 +40,46 @@ type APIResponse []struct {
 }
 
 func main() {
-	resp, err := http.Get("https://api.dictionaryapi.dev/api/v2/entries/en/beauty")
-
-	if err != nil {
-		panic(err)
-	}
-
-	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
-
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println(string(body))
-
 	index := func(w http.ResponseWriter, r *http.Request) {
-		tmpl := template.Must(template.ParseFiles("pages/index.html"))
-		tmpl.Execute(w, nil)
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		template := template.Must(template.ParseFiles("pages/index.html"))
+		template.Execute(w, nil)
 	}
 
 	word := func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		err := r.ParseForm()
+		if err != nil {
+			http.Error(w, "Failed to parse form data", http.StatusInternalServerError)
+			return
+		}
+
+		word := r.Form.Get("word")
+
 		baseUrl := "https://api.dictionaryapi.dev/api/v2/entries/en/"
-		resp, err := http.Get(baseUrl + r.URL.Query().Get("word"))
+		url := baseUrl + word
+		fmt.Println(url)
+		resp, err := http.Get(url)
 
 		if err != nil {
-			panic(err)
+			http.Error(w, "Failed to get word from dictionary API", http.StatusInternalServerError)
+			return
 		}
 
 		defer resp.Body.Close()
 		body, err := io.ReadAll(resp.Body)
 
 		if err != nil {
-			panic(err)
+			http.Error(w, "Failed to get the API response body", http.StatusInternalServerError)
+			return
 		}
 
 		var response APIResponse
@@ -80,10 +87,12 @@ func main() {
 		err = json.Unmarshal(body, &response)
 
 		if err != nil {
-			panic(err)
+			http.Error(w, "Failed to parse the body data", http.StatusInternalServerError)
+			return
 		}
 
-		fmt.Print(response)
+		template := template.Must(template.ParseFiles("components/word.html"))
+		template.Execute(w, response[0])
 	}
 
 	http.HandleFunc("/", index)
